@@ -29,6 +29,6 @@ $plugin->component = 'lifecyclestep_pushbackuptask';
 $plugin->dependencies = array(
         'tool_lifecycle' => 2022112400
 );
-$plugin->requires = 2022112800; // Requires Moodle 3.9+.
-$plugin->release = 'v0.0.0';
-$plugin->maturity = MATURITY_BETA;
+$plugin->requires = 2022112800; // Requires Moodle 4.1+.
+$plugin->release = 'v1.0.0';
+$plugin->maturity = MATURITY_STABLE;
