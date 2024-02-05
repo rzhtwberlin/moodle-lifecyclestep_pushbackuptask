@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024012900;
+$plugin->version = 2024012901;
 $plugin->component = 'lifecyclestep_pushbackuptask';
 $plugin->dependencies = array(
         'tool_lifecycle' => 2022112400
 );
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->release = 'v1.0.0';
+$plugin->release = 'v1.1.0';
 $plugin->maturity = MATURITY_STABLE;
