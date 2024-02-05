@@ -34,7 +34,12 @@ class course_backup_task extends \core\task\adhoc_task {
      * Run the adhoc task and preform the backup.
      */
     public function execute() {
-        global $DB;
+        global $CFG, $DB;
+
+        if (!empty($CFG->custom_no_tool_lifecycle_adhoc_backups)) {
+            mtrace('Tool lifecycle adhoc backups are disabled via config.php ($CFG->custom_no_tool_lifecycle_adhoc_backups)');
+            return;
+        }
 
         $lockfactory = \core\lock\lock_config::get_lock_factory('course_backup_adhoc');
         $courseid = $this->get_custom_data()->courseid;
