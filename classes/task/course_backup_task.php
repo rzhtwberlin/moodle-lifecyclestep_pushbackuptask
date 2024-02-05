@@ -34,7 +34,35 @@ class course_backup_task extends \core\task\adhoc_task {
      * Run the adhoc task and preform the backup.
      */
     public function execute() {
+        global $DB;
+
+        $lockfactory = \core\lock\lock_config::get_lock_factory('course_backup_adhoc');
         $courseid = $this->get_custom_data()->courseid;
-        backup_manager::create_course_backup($courseid);
+
+        try {
+            $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+        } catch (\moodle_exception $e) {
+            mtrace('Invalid course id: ' . $courseid . ', task aborted.');
+            return;
+        }
+
+        if (!$lock = $lockfactory->get_lock('lifecyclestep_pushbackuptask_' . $courseid, 10)) {
+            mtrace('Backup adhoc task for: ' . $course->fullname . 'is already running.');
+            return;
+        } else {
+            mtrace('Processing backup for course: ' . $course->fullname);
+        }
+
+        try {
+            backup_manager::create_course_backup($courseid);
+        } catch (Exception $e) {
+            mtrace('Backup for course: ' . $course->fullname . ' encounters an error.');
+            mtrace('Exception: ' . $e->getMessage());
+            mtrace('Debug: ' . $e->debuginfo);
+        } finally {
+            // Everything is finished release lock.
+            $lock->release();
+            mtrace('Backup for course: ' . $course->fullname . ' completed.');
+        }
     }
 }
